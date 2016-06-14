@@ -22,6 +22,7 @@ export default function tip() {
       svg       = null,
       point     = null,
       target    = null,
+      parent    = null,
       style     = defaultTipStyle;
 
   function initNode() {
@@ -61,13 +62,13 @@ export default function tip() {
     styleEl.exit().remove();
     styleEl = styleEl.enter().append('style').attr('type', 'text/css').merge(styleEl);
     styleEl.text(style);
-    document.body.appendChild(node)
   }
 
   // Public - show the tooltip on the screen
   //
   // Returns a tip
   _impl.show = function() {
+    if(!parent) _impl.parent(document.body);
     var args = [].slice.call(arguments)
     if(args[args.length - 1] instanceof SVGElement) {
       target = args.pop()
@@ -79,8 +80,7 @@ export default function tip() {
         nodel   = getNodeEl(),
         i       = directions.length,
         coords,
-        scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
-        scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
+        parentCoords = node.offsetParent.getBoundingClientRect();
 
     nodel.html(content)
       .style('opacity', 1)
@@ -89,8 +89,8 @@ export default function tip() {
     while(i--) nodel.classed(directions[i], false)
     coords = direction_callbacks[dir].apply(this)
     nodel.classed(dir, true)
-      .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
-      .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
+      .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
+      .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
 
     return _impl;
   }
@@ -189,7 +189,22 @@ export default function tip() {
 
   _impl.style = function(value) {
     return arguments.length ? (style = defaultTipStyle + value, _impl) : style;
-  }; 
+  }
+
+  _impl.parent = function(v) {
+    if (!arguments.length) return parent;
+    parent = v || document.body;
+    parent.appendChild(node);
+
+    // Make sure offsetParent has a position so the tip can be
+    // based from it. Mainly a concern with <body>.
+    var offsetParent = select(node.offsetParent)
+    if (offsetParent.style('position') === 'static') {
+     offsetParent.style('position', 'relative')
+    }
+
+    return _impl;
+  }
 
 
   function direction_n() {
