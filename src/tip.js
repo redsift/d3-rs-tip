@@ -3,11 +3,10 @@
 //
 // Tooltips for d3.js SVG visualizations
 
-import { select, selection } from 'd3-selection';
-import { html as svg } from '@redsift/d3-rs-svg';
+import { select, selection, event } from 'd3-selection';
 
 export default function tip() {
-  var d3_tip_functor = (v) => (typeof v === "function" ? v : _ => v);
+  var d3_tip_functor = (v) => (typeof v === "function" ? v : () => v);
   var d3_tip_direction = () => 'n';
   var d3_tip_offset = () => [0, 0];
   var d3_tip_html = () => ' ';
@@ -59,7 +58,7 @@ export default function tip() {
       node = initNode();
       // re-add node to DOM
       parent.appendChild(node);
-    };
+    }
     return select(node);
   }
 
@@ -123,7 +122,7 @@ export default function tip() {
   // v - value of the attribute
   //
   // Returns tip or attribute value
-  _impl.attr = function(n, v) {
+  _impl.attr = function(n) {
     if (arguments.length < 2 && typeof n === 'string') {
       return getNodeEl().attr(n)
     } else {
@@ -140,7 +139,7 @@ export default function tip() {
   // v - value of the property
   //
   // Returns tip or style property value
-  _impl.style = function(n, v) {
+  _impl.style = function(n) {
     if (arguments.length < 2 && typeof n === 'string') {
       return getNodeEl().style(n)
     } else {
@@ -297,7 +296,7 @@ export default function tip() {
   //
   // Returns an Object {n, s, e, w, nw, sw, ne, se}
   function getScreenBBox() {
-    var targetel   = target || d3.event.target;
+    var targetel   = target || event.target;
 
     while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
         targetel = targetel.parentNode;
@@ -346,4 +345,4 @@ export default function tip() {
   directions = Object.keys(direction_callbacks);
 
   return _impl;
-};
+}

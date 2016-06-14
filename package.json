@@ -19,15 +19,14 @@
     "url": "https://github.com/redsift/d3-rs-tip.git"
   },
   "scripts": {
-    "serve": "gulp -o d3-rs-tip -g d3-selection -g d3-collection -g @redsift/d3-rs-svg serve",
-    "build": "gulp -o d3-rs-tip -g d3-selection -g d3-collection -g @redsift/d3-rs-svg build",
+    "serve": "gulp -o d3-rs-tip -g d3-selection serve",
+    "build": "gulp -o d3-rs-tip -g d3-selection build",
     "pretest": "npm outdated && npm run build",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
     "version": "json2module package.json > package.js",
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@redsift/d3-rs-svg": "~0.2.3",
     "d3-selection": "~0.8.0"
   },
   "devDependencies": {
