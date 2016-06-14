@@ -2,6 +2,11 @@
 // Copyright (c) 2013 Justin Palmer
 //
 // Tooltips for d3.js SVG visualizations
+/**
+ * Heavily based on work by Justin Palmer
+ *
+ * Copyright (c) 2016 Redsift Limited. All rights reserved.
+*/
 
 import { select, selection, event } from 'd3-selection';
 
