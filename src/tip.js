@@ -46,7 +46,7 @@ export default function tip() {
     if(node === null) {
       node = initNode();
       // re-add node to DOM
-      document.body.appendChild(node);
+      parent.appendChild(node);
     };
     return select(node);
   }
