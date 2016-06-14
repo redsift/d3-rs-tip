@@ -11,6 +11,9 @@ export default function tip() {
   var d3_tip_direction = () => 'n';
   var d3_tip_offset = () => [0, 0];
   var d3_tip_html = () => ' ';
+  var defaultTipStyle = '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;}' +
+    '/* Creates a small triangle extender for the tooltip */.d3-tip:after {box-sizing: border-box;display: inline;font-size: 10px;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.8);content: &#9660;;position: absolute;text-align: center;}' +
+    '/* Style northward tooltips differently */.d3-tip.n:after {margin: -1px 0 0 0;top: 100%;left: 0;}';
 
   var direction = d3_tip_direction,
       offset    = d3_tip_offset,
@@ -19,14 +22,18 @@ export default function tip() {
       svg       = null,
       point     = null,
       target    = null,
-      style     = null;
+      style     = defaultTipStyle;
 
   function _impl(vis) {
-    var style = '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;}'+
-      "/* Creates a small triangle extender for the tooltip */.d3-tip:after {box-sizing: border-box;display: inline;font-size: 10px;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.8);content: '&#9660;';position: absolute;text-align: center;}"+
-      '/* Style northward tooltips differently */.d3-tip.n:after {margin: -1px 0 0 0;top: 100%;left: 0;}';
     svg = getSVGNode(vis)
     point = svg.createSVGPoint()
+    svg = select(svg)
+    svg.append('defs')
+    var defsEl = svg.select('defs');
+    var styleEl = defsEl.selectAll('style').data(style ? [ style ] : []);
+    styleEl.exit().remove();
+    styleEl = styleEl.enter().append('style').attr('type', 'text/css').merge(styleEl);
+    styleEl.text(style);
     document.body.appendChild(node)
   }
 
