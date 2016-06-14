@@ -230,7 +230,7 @@ export default function tip() {
   function direction_s() {
     var bbox = getScreenBBox()
     return {
-      top:  bbox.s.y,
+      top:  bbox.s.y + node.offsetHeight / 2,
       left: bbox.s.x - node.offsetWidth / 2
     }
   }
@@ -239,7 +239,7 @@ export default function tip() {
     var bbox = getScreenBBox()
     return {
       top:  bbox.e.y - node.offsetHeight / 2,
-      left: bbox.e.x
+      left: bbox.e.x + arrowSizePx
     }
   }
 
@@ -247,7 +247,7 @@ export default function tip() {
     var bbox = getScreenBBox()
     return {
       top:  bbox.w.y - node.offsetHeight / 2,
-      left: bbox.w.x - node.offsetWidth
+      left: bbox.w.x - node.offsetWidth - arrowSizePx
     }
   }
 
