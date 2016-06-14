@@ -24,6 +24,31 @@ export default function tip() {
       target    = null,
       style     = defaultTipStyle;
 
+  function initNode() {
+    var node = select(document.createElement('div'))
+    node
+      .style('position','absolute')
+      .style('top', 0)
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+      .style('box-sizing', 'border-box');
+    return node.node()
+  }
+
+  function getSVGNode(el) {
+    el = el.node()
+    return el.tagName.toLowerCase() === 'svg' ? el : el.ownerSVGElement;
+  }
+
+  function getNodeEl() {
+    if(node === null) {
+      node = initNode();
+      // re-add node to DOM
+      document.body.appendChild(node);
+    };
+    return select(node);
+  }
+
   function _impl(vis) {
     svg = getSVGNode(vis)
     point = svg.createSVGPoint()
@@ -65,7 +90,7 @@ export default function tip() {
       .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
       .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
 
-    return _impl
+    return _impl;
   }
 
   // Public - hide the tooltip
@@ -75,7 +100,7 @@ export default function tip() {
     var nodel = getNodeEl()
     nodel.style('opacity', 0)
       .style('pointer-events', 'none')
-    return _impl
+    return _impl;
   }
 
   // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
@@ -92,7 +117,7 @@ export default function tip() {
       selection.prototype.attr.apply(getNodeEl(), args)
     }
 
-    return _impl
+    return _impl;
   }
 
   // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
@@ -109,7 +134,7 @@ export default function tip() {
       selection.prototype.style.apply(getNodeEl(), args)
     }
 
-    return _impl
+    return _impl;
   }
 
   // Public: Set or get the direction of the tooltip
@@ -122,7 +147,7 @@ export default function tip() {
     if (!arguments.length) return direction
     direction = v == null ? v : d3_tip_functor(v)
 
-    return _impl
+    return _impl;
   }
 
   // Public: Sets or gets the offset of the tip
@@ -134,7 +159,7 @@ export default function tip() {
     if (!arguments.length) return offset
     offset = v == null ? v : d3_tip_functor(v)
 
-    return _impl
+    return _impl;
   }
 
   // Public: sets or gets the html value of the tooltip
@@ -146,7 +171,7 @@ export default function tip() {
     if (!arguments.length) return html
     html = v == null ? v : d3_tip_functor(v)
 
-    return _impl
+    return _impl;
   }
 
   // Public: destroys the tooltip and removes it from the DOM
@@ -161,7 +186,7 @@ export default function tip() {
   }
 
   _impl.style = function(value) {
-    return arguments.length ? (style = value, _impl) : style;
+    return arguments.length ? (style = defaultTipStyle + value, _impl) : style;
   }; 
 
 
@@ -229,34 +254,6 @@ export default function tip() {
     }
   }
 
-  function initNode() {
-    var node = select(document.createElement('div'))
-    node
-      .style('position','absolute')
-      .style('top', 0)
-      .style('opacity', 0)
-      .style('pointer-events', 'none')
-      .style('box-sizing', 'border-box');
-    return node.node()
-  }
-
-  function getSVGNode(el) {
-    el = el.node()
-    if(el.tagName.toLowerCase() === 'svg')
-      return el
-
-    return el.ownerSVGElement
-  }
-
-  function getNodeEl() {
-    if(node === null) {
-      node = initNode();
-      // re-add node to DOM
-      document.body.appendChild(node);
-    };
-    return select(node);
-  }
-
   // Private - gets the screen coordinates of a shape
   //
   // Given a shape on the screen, will return an SVGPoint for the directions
@@ -304,7 +301,7 @@ export default function tip() {
     point.y += height
     bbox.s = point.matrixTransform(matrix)
 
-    return bbox
+    return bbox;
   }
 
   var direction_callbacks = {
