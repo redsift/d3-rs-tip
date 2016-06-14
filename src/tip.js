@@ -30,6 +30,7 @@ export default function tip() {
     node
       .style('position','absolute')
       .style('top', 0)
+      .style('left', 0)
       .style('opacity', 0)
       .style('pointer-events', 'none')
       .style('box-sizing', 'border-box');
