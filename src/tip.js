@@ -11,9 +11,20 @@ export default function tip() {
   var d3_tip_direction = () => 'n';
   var d3_tip_offset = () => [0, 0];
   var d3_tip_html = () => ' ';
-  var defaultTipStyle = '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;}' +
-    '/* Creates a small triangle extender for the tooltip */.d3-tip:after {box-sizing: border-box;display: inline;font-size: 10px;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.8);content: &#9660;;position: absolute;text-align: center;}' +
-    '/* Style northward tooltips differently */.d3-tip.n:after {margin: -1px 0 0 0;top: 100%;left: 0;}';
+  var arrowSizePx = 7;
+  var defaultTipStyle = [
+    '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;pointer-events: none;}',
+    '/* Creates a small triangle extender for the tooltip */',
+    '.d3-tip:after {box-sizing: border-box;display: inline;font-size: 10px;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.8);position: absolute;pointer-events: none;}',
+    '/* Northward tooltips */',
+    '.d3-tip.n:after {content: "\\25bc";margin: -1px 0 0 0;top: 100%;left: 0;text-align: center;}',
+    '/* Eastward tooltips */',
+    '.d3-tip.e:after {content: "\\25C0";margin: -4px 0 0 0;top: 50%;left: -8px;}',
+    '/* Southward tooltips */',
+    '.d3-tip.s:after {content: "\\25B2";margin: 0 0 1px 0;top: -7px;left: 0;text-align: center;}',
+    '/* Westward tooltips */',
+    '.d3-tip.w:after {content: "\\25B6";margin: -4px 0 0 -1px;top: 50%;left: 100%;}'
+  ].join('\n');
 
   var direction = d3_tip_direction,
       offset    = d3_tip_offset,
