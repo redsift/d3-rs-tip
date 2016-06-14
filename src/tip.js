@@ -53,7 +53,7 @@ export default function tip() {
       .style('pointer-events', 'all')
 
     while(i--) nodel.classed(directions[i], false)
-    coords = direction_callbacks.get(dir).apply(this)
+    coords = direction_callbacks[dir].apply(this)
     nodel.classed(dir, true)
       .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
       .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
@@ -157,18 +157,6 @@ export default function tip() {
     return arguments.length ? (style = value, _impl) : style;
   }; 
 
-  var direction_callbacks = d3.map({
-    n:  direction_n,
-    s:  direction_s,
-    e:  direction_e,
-    w:  direction_w,
-    nw: direction_nw,
-    ne: direction_ne,
-    sw: direction_sw,
-    se: direction_se
-  }),
-
-  directions = direction_callbacks.keys()
 
   function direction_n() {
     var bbox = getScreenBBox()
@@ -311,6 +299,18 @@ export default function tip() {
 
     return bbox
   }
+
+  var direction_callbacks = {
+    n:  direction_n,
+    s:  direction_s,
+    e:  direction_e,
+    w:  direction_w,
+    nw: direction_nw,
+    ne: direction_ne,
+    sw: direction_sw,
+    se: direction_se
+  },
+  directions = Object.keys(direction_callbacks);
 
   return _impl;
 };
