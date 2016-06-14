@@ -267,7 +267,7 @@ export default function tip() {
     var bbox = getScreenBBox()
     return {
       top:  bbox.se.y,
-      left: bbox.e.x
+      left: bbox.se.x
     }
   }
 
