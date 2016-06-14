@@ -37,6 +37,7 @@ export default function tip() {
 
   function getSVGNode(el) {
     el = el.node()
+    if(!el) return;
     return el.tagName.toLowerCase() === 'svg' ? el : el.ownerSVGElement;
   }
 
@@ -51,6 +52,7 @@ export default function tip() {
 
   function _impl(vis) {
     svg = getSVGNode(vis)
+    if(!svg) return;
     point = svg.createSVGPoint()
     svg = select(svg)
     svg.append('defs')
