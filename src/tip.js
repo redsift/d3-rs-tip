@@ -15,7 +15,6 @@ export default function tip() {
   var d3_tip_direction = () => 'n';
   var d3_tip_offset = () => [0, 0];
   var d3_tip_html = () => ' ';
-  var arrowSizePx = 7;
   var defaultTipStyle = [
     '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;pointer-events: none;}',
     '/* Creates a small triangle extender for the tooltip */',
@@ -234,7 +233,7 @@ export default function tip() {
   function direction_s() {
     var bbox = getScreenBBox()
     return {
-      top:  bbox.s.y + node.offsetHeight / 2,
+      top:  bbox.s.y,
       left: bbox.s.x - node.offsetWidth / 2
     }
   }
@@ -243,7 +242,7 @@ export default function tip() {
     var bbox = getScreenBBox()
     return {
       top:  bbox.e.y - node.offsetHeight / 2,
-      left: bbox.e.x + arrowSizePx
+      left: bbox.e.x
     }
   }
 
@@ -251,7 +250,7 @@ export default function tip() {
     var bbox = getScreenBBox()
     return {
       top:  bbox.w.y - node.offsetHeight / 2,
-      left: bbox.w.x - node.offsetWidth - arrowSizePx
+      left: bbox.w.x - node.offsetWidth
     }
   }
 
