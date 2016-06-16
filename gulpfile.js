@@ -12,8 +12,9 @@ var util = require('gulp-util');
 var rollup = require('rollup-stream'); 
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
-var babel = require('rollup-plugin-babel');
-var includes = require('rollup-plugin-includepaths');
+var buble = require('rollup-plugin-buble');
+var commonjs = require('rollup-plugin-commonjs');
+var nodeResolve = require('rollup-plugin-node-resolve');
 var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
@@ -46,23 +47,43 @@ gulp.task('clean', () => del([ 'distribution/**' ]));
 
 gulp.task('umd', task.umd = () => {  
   return rollup({
-            moduleName: outputFilename.replace(/-/g, '_'),
-            globals: globalMap,
-            entry: './index.js',
-            format: 'umd',
-            sourceMap: true,
-            plugins: [ includes({ paths: [ 'src/' ] }), babel() ]
-        })
-        .pipe(source('main.js', './src'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(rename({basename: outputFilename}))
-        .pipe(rename({suffix: '.umd-es2015'}))
-        .pipe(gulp.dest('distribution/'))
-        .pipe(uglify())
-        .pipe(rename({suffix: '.min'}))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('distribution/'));
+        moduleName: outputFilename.replace(/-/g, '_'),
+        globals: globalMap,
+        entry: 'index.js',
+        format: 'umd',
+        sourceMap: true,
+        plugins: [ 
+            nodeResolve({
+                // use "jsnext:main" if possible
+                // – see https://github.com/rollup/rollup/wiki/jsnext:main
+                jsnext: true,  // Default: false
+
+                // use "main" field or index.js, even if it's not an ES6 module
+                // (needs to be converted from CommonJS to ES6
+                // – see https://github.com/rollup/rollup-plugin-commonjs
+                main: true,  // Default: true
+
+                // not all files you want to resolve are .js files
+                extensions: [ '.js', '.json' ],  // Default: ['.js']
+
+                // whether to prefer built-in modules (e.g. `fs`, `path`) or
+                // local ones with the same names
+                preferBuiltins: false  // Default: true
+            }),
+            commonjs(), 
+            buble()
+        ]
+    })
+    .pipe(source('main.js', './src'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(rename({basename: outputFilename}))
+    .pipe(rename({suffix: '.umd-es2015'}))
+    .pipe(gulp.dest('distribution/'))
+    .pipe(uglify())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('distribution/'));
 });
 
 gulp.task('browser-sync', function() {
