@@ -27,8 +27,6 @@
     var chart = d3_rs_calendar_chart.html().lastWeeks(12);
 
     var rstip = d3_rs_tip.tip()
-        .attr('class', 'd3-tip')
-        .direction('n')
         .html((d) => d3.timeFormat('%d %b %Y')(new Date(d.date)) + ': ' + d.value);
 
     var chartElm = d3.select('#elm')

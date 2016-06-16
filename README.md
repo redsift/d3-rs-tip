@@ -15,7 +15,6 @@ UMD from //static.redsift.io/reusable/d3-rs-tip/latest/d3-rs-tip.umd-es2015.min.
   import { tip } from "@redsift/d3-rs-tip";
   
   var rtip = tip()
-      .attr('class', 'd3-tip')
       .html(d => d.text)
   elmS.call(rtip);
 

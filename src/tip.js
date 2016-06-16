@@ -10,7 +10,7 @@
 
 import { select, selection, event } from 'd3-selection';
 
-export default function tip() {
+export default function tip(id) {
   var d3_tip_functor = (v) => (typeof v === "function" ? v : () => v);
   var d3_tip_direction = () => 'n';
   var d3_tip_offset = () => [0, 0];
@@ -32,6 +32,7 @@ export default function tip() {
   var direction = d3_tip_direction,
       offset    = d3_tip_offset,
       html      = d3_tip_html,
+      classed    = 'd3-tip',
       node      = initNode(),
       svg       = null,
       point     = null,
@@ -42,6 +43,7 @@ export default function tip() {
   function initNode() {
     var node = select(document.createElement('div'))
     node
+      .classed(classed, true)
       .style('position','absolute')
       .style('top', 0)
       .style('left', 0)
@@ -78,6 +80,14 @@ export default function tip() {
     styleEl = styleEl.enter().append('style').attr('type', 'text/css').merge(styleEl);
     styleEl.text(style);
   }
+
+  _impl.self = function() { return 'g' + (id ?  '#' + id : '.' + classed); }
+
+  _impl.id = function() { return id; };
+    
+  _impl.classed = function(_) {
+    return arguments.length ? (classed = _, _impl) : classed;
+  };
 
   // Public - show the tooltip on the screen
   //
