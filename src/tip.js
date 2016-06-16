@@ -85,9 +85,7 @@ export default function tip() {
   _impl.show = function() {
     if(!parent) _impl.parent(document.body);
     var args = [].slice.call(arguments)
-    if(args[args.length - 1] instanceof SVGElement) {
-      target = args.pop()
-    }
+    target = this;
 
     var content = html.apply(this, args),
         poffset = offset.apply(this, args),
