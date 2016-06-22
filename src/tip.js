@@ -193,8 +193,8 @@ export default function tip(id) {
     return _impl;
   }
 
-  _impl.style = function(value) {
-    return arguments.length ? (style = defaultTipStyle + value, _impl) : style;
+  _impl.style = function(_) {
+    return arguments.length ? (style = _, _impl) : style;
   }
 
   _impl.parent = function(v) {
