@@ -17,9 +17,9 @@ export default function tip(id) {
   var d3_tip_html = () => ' ';
   var IsDOMElement = (o) => o instanceof Node;
   var defaultTipStyle = [
-    '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;pointer-events: none;}',
+    '.d3-tip {line-height: 1;font-family: \'Source Code Pro\'; font-weight: bold;font-size: 0.66em;padding: 8px;background: rgba(0, 0, 0, 0.66);color: #fff;border-radius: 2px;pointer-events: none;}',
     '/* Creates a small triangle extender for the tooltip */',
-    '.d3-tip:after {box-sizing: border-box;display: inline;font-size: 10px;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.8);position: absolute;pointer-events: none;}',
+    '.d3-tip:after {box-sizing: border-box;display: inline;font-size: 0.66em;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.66);position: absolute;pointer-events: none;}',
     '/* Northward tooltips */',
     '.d3-tip.n:after {content: "\\25bc";margin: -1px 0 0 0;top: 100%;left: 0;text-align: center;}',
     '/* Eastward tooltips */',
