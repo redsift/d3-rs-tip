@@ -43,6 +43,7 @@ export default function tip(id) {
   function initNode() {
     var node = select(document.createElement('div'))
     node
+      .attr('id', id)
       .classed(classed, true)
       .style('position','absolute')
       .style('top', 0)
