@@ -32,7 +32,7 @@ export default function tip(id) {
   var direction = d3_tip_direction,
       offset    = d3_tip_offset,
       html      = d3_tip_html,
-      classed    = 'd3-tip',
+      classed   = 'd3-tip',
       node      = initNode(),
       svg       = null,
       point     = null,
@@ -140,23 +140,6 @@ export default function tip(id) {
     } else {
       var args =  [].slice.call(arguments)
       selection.prototype.attr.apply(getNodeEl(), args)
-    }
-
-    return _impl;
-  }
-
-  // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
-  //
-  // n - name of the property
-  // v - value of the property
-  //
-  // Returns tip or style property value
-  _impl.style = function(n) {
-    if (arguments.length < 2 && typeof n === 'string') {
-      return getNodeEl().style(n)
-    } else {
-      var args =  [].slice.call(arguments)
-      selection.prototype.style.apply(getNodeEl(), args)
     }
 
     return _impl;
