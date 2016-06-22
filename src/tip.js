@@ -15,6 +15,7 @@ export default function tip(id) {
   var d3_tip_direction = () => 'n';
   var d3_tip_offset = () => [0, 0];
   var d3_tip_html = () => ' ';
+  var IsDOMElement = (o) => o instanceof Node;
   var defaultTipStyle = [
     '.d3-tip {line-height: 1;font-weight: bold;padding: 12px;background: rgba(0, 0, 0, 0.8);color: #fff;border-radius: 2px;pointer-events: none;}',
     '/* Creates a small triangle extender for the tooltip */',
@@ -95,12 +96,16 @@ export default function tip(id) {
   // Returns a tip
   _impl.show = function() {
     if(!parent) _impl.parent(document.body);
-    var args = [].slice.call(arguments)
+    var args = [].slice.call(arguments);
     target = this;
+    if(args.length === 1 && IsDOMElement(args[0])){
+      target = args[0];
+      args[0] = target.__data__;
+    }
 
-    var content = html.apply(this, args),
-        poffset = offset.apply(this, args),
-        dir     = direction.apply(this, args),
+    var content = html.apply(target, args),
+        poffset = offset.apply(target, args),
+        dir     = direction.apply(target, args),
         nodel   = getNodeEl(),
         i       = directions.length,
         coords,
@@ -111,7 +116,7 @@ export default function tip(id) {
       .style('pointer-events', 'all')
 
     while(i--) nodel.classed(directions[i], false)
-    coords = direction_callbacks[dir].apply(this)
+    coords = direction_callbacks[dir].apply(target)
     nodel.classed(dir, true)
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
