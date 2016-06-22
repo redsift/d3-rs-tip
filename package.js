@@ -1,5 +1,5 @@
 export var name = "@redsift/d3-rs-tip";
-export var version = "0.2.2";
+export var version = "0.2.3";
 export var description = "Tip for graphs using D3v4.";
 export var keywords = ["redsift","d3","tip"];
 export var homepage = "https://github.com/redsift/d3-rs-tip";
