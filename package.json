@@ -1,6 +1,6 @@
 {
   "name": "@redsift/d3-rs-tip",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Tip for graphs using D3v4.",
   "keywords": [
     "redsift",
@@ -23,29 +23,29 @@
     "build": "gulp -o d3-rs-tip build",
     "pretest": "npm outdated && npm run build",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
-    "version": "json2module package.json > package.js",
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "d3-selection": "~0.8.0"
+    "d3-selection": "~1.0.0",
+    "@redsift/d3-rs-theme": "~0.3.0"
   },
   "devDependencies": {
     "@redsift/tape-reel": "~0.0.2",
     "babel-preset-es2015-rollup": "^1.1.0",
     "browser-sync": "^2.13.0",
     "del": "^2.2.0",
-    "eslint": "^2.10.2",
+    "eslint": "^3.1.1",
     "gulp": "^3.9.1",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.0.0-alpha",
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
-    "json2module": "~0.0.3",
-    "rollup": "^0.26",
-    "rollup-plugin-buble": "^0.11.0",
+    "rollup": "^0.34.1",
+    "rollup-plugin-buble": "^0.12.1",
     "rollup-plugin-commonjs": "^3.0.0",
     "rollup-plugin-node-resolve": "^1.7.0",
+    "rollup-plugin-json": "^2.0.0",
     "rollup-stream": "^1.6.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
