@@ -11,12 +11,12 @@
 import { select, selection, event } from 'd3-selection';
 
 export default function tip(id) {
-  var d3_tip_functor = (v) => (typeof v === "function" ? v : () => v);
-  var d3_tip_direction = () => 'n';
-  var d3_tip_offset = () => [0, 0];
-  var d3_tip_html = () => ' ';
-  var IsDOMElement = (o) => o instanceof Node;
-  var defaultTipStyle = [
+  let d3_tip_functor = v => (typeof v === "function" ? v : () => v);
+  let d3_tip_direction = () => 'n';
+  let d3_tip_offset = () => [0, 0];
+  let d3_tip_html = () => ' ';
+  let IsDOMElement = o => o instanceof Node;
+  let defaultTipStyle = [
     '.d3-tip {line-height: 1;font-family: \'Source Code Pro\'; font-weight: bold;font-size: 0.66em;padding: 8px;background: rgba(0, 0, 0, 0.66);color: #fff;border-radius: 2px;pointer-events: none;}',
     '/* Creates a small triangle extender for the tooltip */',
     '.d3-tip:after {box-sizing: border-box;display: inline;font-size: 0.66em;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.66);position: absolute;pointer-events: none;}',
@@ -30,7 +30,7 @@ export default function tip(id) {
     '.d3-tip.w:after {content: "\\25B6";margin: -4px 0 0 -1px;top: 50%;left: 100%;}'
   ].join('\n');
 
-  var direction = d3_tip_direction,
+  let direction = d3_tip_direction,
       offset    = d3_tip_offset,
       html      = d3_tip_html,
       classed   = 'd3-tip',
@@ -42,7 +42,7 @@ export default function tip(id) {
       style     = defaultTipStyle;
 
   function initNode() {
-    var node = select(document.createElement('div'))
+    let node = select(document.createElement('div'))
     node
       .attr('id', id)
       .classed(classed, true)
@@ -76,8 +76,8 @@ export default function tip(id) {
     point = svg.createSVGPoint()
     svg = select(svg)
     svg.append('defs')
-    var defsEl = svg.select('defs');
-    var styleEl = defsEl.selectAll('style').data(style ? [ style ] : []);
+    let defsEl = svg.select('defs');
+    let styleEl = defsEl.selectAll('style').data(style ? [ style ] : []);
     styleEl.exit().remove();
     styleEl = styleEl.enter().append('style').attr('type', 'text/css').merge(styleEl);
     styleEl.text(style);
@@ -96,14 +96,14 @@ export default function tip(id) {
   // Returns a tip
   _impl.show = function() {
     if(!parent) _impl.parent(document.body);
-    var args = [].slice.call(arguments);
+    let args = [].slice.call(arguments);
     target = this;
     if(args.length === 1 && IsDOMElement(args[0])){
       target = args[0];
       args[0] = target.__data__;
     }
 
-    var content = html.apply(target, args),
+    let content = html.apply(target, args),
         poffset = offset.apply(target, args),
         dir     = direction.apply(target, args),
         nodel   = getNodeEl(),
@@ -128,7 +128,7 @@ export default function tip(id) {
   //
   // Returns a tip
   _impl.hide = function() {
-    var nodel = getNodeEl()
+    let nodel = getNodeEl()
     nodel.style('opacity', 0)
       .style('pointer-events', 'none')
     return _impl;
@@ -144,7 +144,7 @@ export default function tip(id) {
     if (arguments.length < 2 && typeof n === 'string') {
       return getNodeEl().attr(n)
     } else {
-      var args =  [].slice.call(arguments)
+      let args =  [].slice.call(arguments)
       selection.prototype.attr.apply(getNodeEl(), args)
     }
 
@@ -210,7 +210,7 @@ export default function tip(id) {
 
     // Make sure offsetParent has a position so the tip can be
     // based from it. Mainly a concern with <body>.
-    var offsetParent = select(node.offsetParent)
+    let offsetParent = select(node.offsetParent)
     if (offsetParent.style('position') === 'static') {
      offsetParent.style('position', 'relative')
     }
@@ -220,7 +220,7 @@ export default function tip(id) {
 
 
   function direction_n() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.n.y - node.offsetHeight,
       left: bbox.n.x - node.offsetWidth / 2
@@ -228,7 +228,7 @@ export default function tip(id) {
   }
 
   function direction_s() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.s.y,
       left: bbox.s.x - node.offsetWidth / 2
@@ -236,7 +236,7 @@ export default function tip(id) {
   }
 
   function direction_e() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.e.y - node.offsetHeight / 2,
       left: bbox.e.x
@@ -244,7 +244,7 @@ export default function tip(id) {
   }
 
   function direction_w() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.w.y - node.offsetHeight / 2,
       left: bbox.w.x - node.offsetWidth
@@ -252,7 +252,7 @@ export default function tip(id) {
   }
 
   function direction_nw() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.nw.y - node.offsetHeight,
       left: bbox.nw.x - node.offsetWidth
@@ -260,7 +260,7 @@ export default function tip(id) {
   }
 
   function direction_ne() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.ne.y - node.offsetHeight,
       left: bbox.ne.x
@@ -268,7 +268,7 @@ export default function tip(id) {
   }
 
   function direction_sw() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.sw.y,
       left: bbox.sw.x - node.offsetWidth
@@ -276,7 +276,7 @@ export default function tip(id) {
   }
 
   function direction_se() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
       top:  bbox.se.y,
       left: bbox.se.x
@@ -297,13 +297,13 @@ export default function tip(id) {
   //
   // Returns an Object {n, s, e, w, nw, sw, ne, se}
   function getScreenBBox() {
-    var targetel   = target || event.target;
+    let targetel   = target || event.target;
 
     while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
         targetel = targetel.parentNode;
     }
 
-    var bbox       = {},
+    let bbox       = {},
         matrix     = targetel.getScreenCTM(),
         tbbox      = targetel.getBBox(),
         width      = tbbox.width,
@@ -333,7 +333,7 @@ export default function tip(id) {
     return bbox;
   }
 
-  var direction_callbacks = {
+  let direction_callbacks = {
     n:  direction_n,
     s:  direction_s,
     e:  direction_e,
