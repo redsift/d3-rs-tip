@@ -53,7 +53,8 @@
 
     var rstip2 = d3_rs_tip.body('custom')
                   .transition(true)
-                  .html(d => 'Custom Placement');
+                  .theme('dark')
+                  .html(d => `<h4>Custom Tip</h4><p><img width="50" height="50" src="${d}"/></p>`);
       
     var svg = d3_rs_svg.html()
               .margin(0)
@@ -67,6 +68,7 @@
         .call(rstip2)
         .select(svg.child())
           .append('rect')
+          .datum('http://theinspirationgrid.com/wp-content/uploads/2012/07/835a-motion.gif')
           .attr('x', 100)
           .attr('y', 100)
           .attr('width', 100)
@@ -74,7 +76,6 @@
           .attr('fill', 'blue')
           .on('mouseover', rstip2.show)
           .on('mouseout', rstip2.hide);
-              
     </script>
   </body>
 </html>
