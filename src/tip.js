@@ -9,6 +9,11 @@
 // Tooltips for d3.js SVG visualizations
 
 import { select, selection, event } from 'd3-selection';
+import { transition as dummy } from 'd3-transition';
+import { 
+  display,
+  fonts
+} from '@redsift/d3-rs-theme';
 
 export default function tip(id) {
   let d3_tip_functor = v => (typeof v === "function" ? v : () => v);
@@ -30,6 +35,8 @@ export default function tip(id) {
     '.d3-tip.w:after {content: "\\25B6";margin: -4px 0 0 -1px;top: 50%;left: 100%;}'
   ].join('\n');
 
+  dummy(); // dummy injection for transition
+  
   let direction = d3_tip_direction,
       offset    = d3_tip_offset,
       html      = d3_tip_html,
@@ -39,13 +46,14 @@ export default function tip(id) {
       point     = null,
       target    = null,
       parent    = null,
+      transition= false,
       style     = defaultTipStyle;
 
   function initNode() {
     let node = select(document.createElement('div'))
     node
       .attr('id', id)
-      .classed(classed, true)
+      .attr('class', classed)
       .style('position','absolute')
       .style('top', 0)
       .style('left', 0)
@@ -111,15 +119,22 @@ export default function tip(id) {
         coords,
         parentCoords = node.offsetParent.getBoundingClientRect();
 
-    nodel.html(content)
-      .style('opacity', 1)
-      .style('pointer-events', 'all')
-
     while(i--) nodel.classed(directions[i], false)
     coords = direction_callbacks[dir].apply(target)
     nodel.classed(dir, true)
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
+      .html(content);
+    
+    if (transition != null && transition !== false) {
+      nodel = nodel.transition();
+      if (typeof transition === 'number') {
+        nodel = nodel.duration(transition);
+      }
+    }
+      
+    
+    nodel.style('opacity', 1.0);
 
     return _impl;
   }
@@ -128,9 +143,7 @@ export default function tip(id) {
   //
   // Returns a tip
   _impl.hide = function() {
-    let nodel = getNodeEl()
-    nodel.style('opacity', 0)
-      .style('pointer-events', 'none')
+    getNodeEl().style('opacity', 0.0);
     return _impl;
   }
 
@@ -202,6 +215,10 @@ export default function tip(id) {
   _impl.style = function(_) {
     return arguments.length ? (style = _, _impl) : style;
   }
+  
+  _impl.transition = function(_) {
+    return arguments.length ? (transition = _, _impl) : transition;
+  }
 
   _impl.parent = function(v) {
     if (!arguments.length) return parent;
@@ -217,6 +234,7 @@ export default function tip(id) {
 
     return _impl;
   }
+
 
 
   function direction_n() {

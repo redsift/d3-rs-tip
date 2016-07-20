@@ -12,7 +12,7 @@ UMD from //static.redsift.io/reusable/d3-rs-tip/latest/d3-rs-tip.umd-es2015.min.
 
 ### ES6
 ```
-  import { tip } from "@redsift/d3-rs-tip";
+  import { body as tip } from "@redsift/d3-rs-tip";
   
   var rtip = tip()
       .html(d => d.text)
@@ -27,7 +27,7 @@ If using rollup.js for a browser target, ensure `d3-rs-tip` is part of the globa
 ### Require
 ```
   var d3Tip = require("@redsift/d3-rs-tip");
-  var eml = d3Tip.tip();
+  var eml = d3Tip.body();
   ...
   
 ```
@@ -40,3 +40,4 @@ If using rollup.js for a browser target, ensure `d3-rs-tip` is part of the globa
 |direction| Sets or gets direction of the tooltip| one of `n`,`s`,`e`,`w`,`nw`,`sw`,`ne`,`se`
 |style| Sets or gets the CSS wrapped with the component| string of CSS properties
 |parent| Sets or gets the parent element the tip will be appended to| DOM Node (default: `body`)
+transition| Causes the tip to fade in `boolean|number`. If a number, the value is set at the time for the fade

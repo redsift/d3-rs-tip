@@ -1,15 +1,26 @@
 <html>
-<meta charset="utf-8">
-<head>
-  <link rel="stylesheet" type="text/css" href="https://static.redsift.io/ui/latest/css/full/redsift-xtra.min.css">
+  <meta charset="utf-8">
+  <head>
+    <link rel="stylesheet" type="text/css" href="https://static.redsift.io/ui/latest/css/full/redsift-xtra.min.css">
+  <style>
+    body {
+      margin: 1em;
+    }
+    svg {
+      margin-bottom: 2em;
+    }
+  </style>
   </head>
   <body>
-    <h1>SVG Tip Demo</h2>
-    <div id="elm">
+    <h1>SVG Tip Demo</h1>
+    <h3>Cal chart</h3>
+    <div id="elm"></div>
 
-    </div>
+    <h3>Custom position</h3>
+    <div id="hov"></div>
         
-    <script src="https://d3js.org/d3.v4.0.0-alpha.44.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="//static.redsift.io/reusable/d3-rs-theme/latest/d3-rs-theme.umd-es2015.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-svg/latest/d3-rs-svg.umd-es2015.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-calendar-chart/latest/d3-rs-calendar-chart.umd-es2015.min.js"></script>
     <script src="/d3-rs-tip.umd-es2015.min.js"></script>
@@ -23,11 +34,10 @@
       {date: '2016-06-02', value: 15}
     ];
 
-    
     var chart = d3_rs_calendar_chart.html().lastWeeks(12);
 
-    var rstip = d3_rs_tip.tip()
-        .html((d) => d3.timeFormat('%d %b %Y')(new Date(d.date)) + ': ' + d.value);
+    var rstip = d3_rs_tip.body()
+        .html(d => d3.timeFormat('%d %b %Y')(new Date(d.date)) + ': ' + d.value);
 
     var chartElm = d3.select('#elm')
       .datum(points)
@@ -41,6 +51,30 @@
     var a = document.querySelector("[data-date='2016-06-02']");
     rstip.show(a)
 
+    var rstip2 = d3_rs_tip.body('custom')
+                  .transition(true)
+                  .html(d => 'Custom Placement');
+      
+    var svg = d3_rs_svg.html()
+              .margin(0)
+              .width(300)
+              .height(300)
+              .background(d3_rs_theme.display.dark.background);
+
+    d3.select('#hov')
+        .call(svg)
+        .select(svg.self())
+        .call(rstip2)
+        .select(svg.child())
+          .append('rect')
+          .attr('x', 100)
+          .attr('y', 100)
+          .attr('width', 100)
+          .attr('height', 100)
+          .attr('fill', 'blue')
+          .on('mouseover', rstip2.show)
+          .on('mouseout', rstip2.hide);
+              
     </script>
   </body>
 </html>

@@ -4,5 +4,5 @@ export {
 
 
 export {
-  default as tip
+  default as body
 } from "./src/tip.js";

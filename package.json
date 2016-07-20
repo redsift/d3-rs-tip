@@ -1,6 +1,6 @@
 {
   "name": "@redsift/d3-rs-tip",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "Tip for graphs using D3v4.",
   "keywords": [
     "redsift",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "d3-selection": "~1.0.0",
+    "d3-transition": "~1.0.0",
     "@redsift/d3-rs-theme": "~0.3.0"
   },
   "devDependencies": {
