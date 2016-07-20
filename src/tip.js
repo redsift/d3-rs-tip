@@ -9,43 +9,39 @@
 // Tooltips for d3.js SVG visualizations
 
 import { select, selection, event } from 'd3-selection';
+import { transition as dummy } from 'd3-transition';
+import { 
+  display,
+  fonts
+} from '@redsift/d3-rs-theme';
 
 export default function tip(id) {
-  var d3_tip_functor = (v) => (typeof v === "function" ? v : () => v);
-  var d3_tip_direction = () => 'n';
-  var d3_tip_offset = () => [0, 0];
-  var d3_tip_html = () => ' ';
-  var IsDOMElement = (o) => o instanceof Node;
-  var defaultTipStyle = [
-    '.d3-tip {line-height: 1;font-family: \'Source Code Pro\'; font-weight: bold;font-size: 0.66em;padding: 8px;background: rgba(0, 0, 0, 0.66);color: #fff;border-radius: 2px;pointer-events: none;}',
-    '/* Creates a small triangle extender for the tooltip */',
-    '.d3-tip:after {box-sizing: border-box;display: inline;font-size: 0.66em;width: 100%;line-height: 1;color: rgba(0, 0, 0, 0.66);position: absolute;pointer-events: none;}',
-    '/* Northward tooltips */',
-    '.d3-tip.n:after {content: "\\25bc";margin: -1px 0 0 0;top: 100%;left: 0;text-align: center;}',
-    '/* Eastward tooltips */',
-    '.d3-tip.e:after {content: "\\25C0";margin: -4px 0 0 0;top: 50%;left: -8px;}',
-    '/* Southward tooltips */',
-    '.d3-tip.s:after {content: "\\25B2";margin: 0 0 1px 0;top: -7px;left: 0;text-align: center;}',
-    '/* Westward tooltips */',
-    '.d3-tip.w:after {content: "\\25B6";margin: -4px 0 0 -1px;top: 50%;left: 100%;}'
-  ].join('\n');
+  let d3_tip_functor = v => (typeof v === "function" ? v : () => v);
+  let d3_tip_direction = () => 'n';
+  let d3_tip_offset = () => [0, 0];
+  let d3_tip_html = () => ' ';
+  let IsDOMElement = o => o instanceof Node;
 
-  var direction = d3_tip_direction,
+
+  dummy(); // dummy injection for transition
+  
+  let direction = d3_tip_direction,
       offset    = d3_tip_offset,
       html      = d3_tip_html,
       classed   = 'd3-tip',
       node      = initNode(),
-      svg       = null,
       point     = null,
       target    = null,
       parent    = null,
-      style     = defaultTipStyle;
+      theme     = 'light',
+      transition= false,
+      style     = undefined;
 
   function initNode() {
-    var node = select(document.createElement('div'))
+    let node = select(document.createElement('div'))
     node
       .attr('id', id)
-      .classed(classed, true)
+      .attr('class', classed)
       .style('position','absolute')
       .style('top', 0)
       .style('left', 0)
@@ -71,19 +67,36 @@ export default function tip(id) {
   }
 
   function _impl(vis) {
-    svg = getSVGNode(vis)
-    if(!svg) return;
-    point = svg.createSVGPoint()
-    svg = select(svg)
-    svg.append('defs')
-    var defsEl = svg.select('defs');
-    var styleEl = defsEl.selectAll('style').data(style ? [ style ] : []);
+    let svg = getSVGNode(vis)
+    if (!svg) return;
+    
+    if (svg.createSVGPoint != null) {
+      point = svg.createSVGPoint();
+    }
+    svg = select(svg);
+
+    let defsEl = svg.select('defs');
+    if (defsEl.empty()) {
+      defsEl = svg.append('defs');
+    }
+    
+    let _style = style;
+    if (_style === undefined) {
+      _style = _impl.defaultStyle(theme);
+    }
+
+    let styleEl = defsEl.selectAll('style' + (id ?  '#style-tip-' + id : '.style-' + classed)).data(_style ? [ _style ] : []);
     styleEl.exit().remove();
-    styleEl = styleEl.enter().append('style').attr('type', 'text/css').merge(styleEl);
-    styleEl.text(style);
+    styleEl = styleEl.enter()
+                  .append('style')
+                    .attr('type', 'text/css')
+                    .attr('id', (id ?  'style-tip-' + id : null))
+                    .attr('class', (id ?  null : 'style-' + classed))
+                  .merge(styleEl);
+    styleEl.text(s => s);
   }
 
-  _impl.self = function() { return 'g' + (id ?  '#' + id : '.' + classed); }
+  _impl.self = function() { return 'div' + (id ?  '#' + id : '.' + classed); }
 
   _impl.id = function() { return id; };
     
@@ -96,30 +109,38 @@ export default function tip(id) {
   // Returns a tip
   _impl.show = function() {
     if(!parent) _impl.parent(document.body);
-    var args = [].slice.call(arguments);
+    let args = [].slice.call(arguments);
     target = this;
     if(args.length === 1 && IsDOMElement(args[0])){
       target = args[0];
       args[0] = target.__data__;
     }
 
-    var content = html.apply(target, args),
+    let content = html.apply(target, args),
         poffset = offset.apply(target, args),
         dir     = direction.apply(target, args),
         nodel   = getNodeEl(),
         i       = directions.length,
-        coords,
         parentCoords = node.offsetParent.getBoundingClientRect();
 
-    nodel.html(content)
-      .style('opacity', 1)
-      .style('pointer-events', 'all')
+    while(i--) nodel.classed(directions[i], false);
+    
+    let coords = direction_callbacks[dir].apply(target);
 
-    while(i--) nodel.classed(directions[i], false)
-    coords = direction_callbacks[dir].apply(target)
     nodel.classed(dir, true)
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
+      .html(content);
+    
+    if (transition != null && transition !== false) {
+      nodel = nodel.transition();
+      if (typeof transition === 'number') {
+        nodel = nodel.duration(transition);
+      }
+    }
+      
+    
+    nodel.style('opacity', 1.0);
 
     return _impl;
   }
@@ -128,9 +149,7 @@ export default function tip(id) {
   //
   // Returns a tip
   _impl.hide = function() {
-    var nodel = getNodeEl()
-    nodel.style('opacity', 0)
-      .style('pointer-events', 'none')
+    getNodeEl().style('opacity', 0.0);
     return _impl;
   }
 
@@ -144,7 +163,7 @@ export default function tip(id) {
     if (arguments.length < 2 && typeof n === 'string') {
       return getNodeEl().attr(n)
     } else {
-      var args =  [].slice.call(arguments)
+      let args =  [].slice.call(arguments)
       selection.prototype.attr.apply(getNodeEl(), args)
     }
 
@@ -202,6 +221,15 @@ export default function tip(id) {
   _impl.style = function(_) {
     return arguments.length ? (style = _, _impl) : style;
   }
+  
+  _impl.transition = function(_) {
+    return arguments.length ? (transition = _, _impl) : transition;
+  }
+
+  _impl.theme = function(_) {
+    return arguments.length ? (theme = _, _impl) : theme;
+  }  
+  
 
   _impl.parent = function(v) {
     if (!arguments.length) return parent;
@@ -210,7 +238,7 @@ export default function tip(id) {
 
     // Make sure offsetParent has a position so the tip can be
     // based from it. Mainly a concern with <body>.
-    var offsetParent = select(node.offsetParent)
+    let offsetParent = select(node.offsetParent)
     if (offsetParent.style('position') === 'static') {
      offsetParent.style('position', 'relative')
     }
@@ -218,68 +246,121 @@ export default function tip(id) {
     return _impl;
   }
 
+  _impl.defaultStyle = _theme => `
+                  ${fonts.variable.cssImport}  
+                  ${_impl.self()} {
+                                    line-height: 1;
+                                    font-family: ${fonts.variable.family};
+                                    color: ${display[_theme].negative.text};
+                                    font-weight: ${fonts.fixed.weightMonochrome};  
+                                    padding: 8px;
+                                    background: ${display[_theme].negative.background};
+                                    border-radius: 2px;
+                                    pointer-events: none;
+                                  }
+                    /* Creates a small triangle extender for the tooltip */
+                    ${_impl.self()}:after {
+                                      box-sizing: border-box;
+                                      display: inline;
+                                      width: 100%;
+                                      line-height: 1;
+                                      color: ${display[_theme].negative.background};
+                                      position: absolute;
+                                      pointer-events: none;
+                                    }
+                    /* Northward tooltips */
+                    ${_impl.self()}.n:after {
+                                      content: "\\25bc";
+                                      margin: -2px 0 0 0;
+                                      top: 100%;
+                                      left: 0;
+                                      text-align: center;
+                                    }
+                    /* Eastward tooltips */
+                    ${_impl.self()}.e:after {
+                                      content: "\\25C0";
+                                      margin: -4px 0 0 0;
+                                      top: 50%;
+                                      left: -8px;
+                                    }
+                    /* Southward tooltips */
+                    ${_impl.self()}.s:after {
+                                      content: "\\25B2";
+                                      margin: 0 0 1px 0;
+                                      top: -7px;
+                                      left: 0;
+                                      text-align: center;
+                                    }
+                    /* Westward tooltips */
+                    ${_impl.self()}.w:after {
+                                      content: "\\25B6";
+                                      margin: -4px 0 0 -1px;
+                                      top: 50%;
+                                      left: 100%;
+                                    }                
+                `;
 
   function direction_n() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.n.y - node.offsetHeight,
-      left: bbox.n.x - node.offsetWidth / 2
+      top:  Math.round(bbox.n.y - node.offsetHeight),
+      left: Math.round(bbox.n.x - node.offsetWidth / 2)
     }
   }
 
   function direction_s() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.s.y,
-      left: bbox.s.x - node.offsetWidth / 2
+      top:  Math.round(bbox.s.y),
+      left: Math.round(bbox.s.x - node.offsetWidth / 2)
     }
   }
 
   function direction_e() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.e.y - node.offsetHeight / 2,
-      left: bbox.e.x
+      top:  Math.round(bbox.e.y - node.offsetHeight / 2),
+      left: Math.round(bbox.e.x)
     }
   }
 
   function direction_w() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.w.y - node.offsetHeight / 2,
-      left: bbox.w.x - node.offsetWidth
+      top:  Math.round(bbox.w.y - node.offsetHeight / 2),
+      left: Math.round(bbox.w.x - node.offsetWidth)
     }
   }
 
   function direction_nw() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.nw.y - node.offsetHeight,
-      left: bbox.nw.x - node.offsetWidth
+      top:  Math.round(bbox.nw.y - node.offsetHeight),
+      left: Math.round(bbox.nw.x - node.offsetWidth)
     }
   }
 
   function direction_ne() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.ne.y - node.offsetHeight,
-      left: bbox.ne.x
+      top:  Math.round(bbox.ne.y - node.offsetHeight),
+      left: Math.round(bbox.ne.x)
     }
   }
 
   function direction_sw() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.sw.y,
-      left: bbox.sw.x - node.offsetWidth
+      top:  Math.round(bbox.sw.y),
+      left: Math.round(bbox.sw.x - node.offsetWidth)
     }
   }
 
   function direction_se() {
-    var bbox = getScreenBBox()
+    let bbox = getScreenBBox()
     return {
-      top:  bbox.se.y,
-      left: bbox.se.x
+      top:  Math.round(bbox.se.y),
+      left: Math.round(bbox.se.x)
     }
   }
 
@@ -297,13 +378,13 @@ export default function tip(id) {
   //
   // Returns an Object {n, s, e, w, nw, sw, ne, se}
   function getScreenBBox() {
-    var targetel   = target || event.target;
+    let targetel   = target || event.target;
 
     while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
         targetel = targetel.parentNode;
     }
 
-    var bbox       = {},
+    let bbox       = {},
         matrix     = targetel.getScreenCTM(),
         tbbox      = targetel.getBBox(),
         width      = tbbox.width,
@@ -333,7 +414,7 @@ export default function tip(id) {
     return bbox;
   }
 
-  var direction_callbacks = {
+  let direction_callbacks = {
     n:  direction_n,
     s:  direction_s,
     e:  direction_e,
