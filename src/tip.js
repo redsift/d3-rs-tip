@@ -15,6 +15,8 @@ import {
   fonts
 } from '@redsift/d3-rs-theme';
 
+const DEFAULT_WIDTH = 800; // Assume the chart is of this width if generating css
+
 export default function tip(id) {
   let d3_tip_functor = v => (typeof v === "function" ? v : () => v);
   let d3_tip_direction = () => 'n';
@@ -82,7 +84,7 @@ export default function tip(id) {
     
     let _style = style;
     if (_style === undefined) {
-      _style = _impl.defaultStyle(theme);
+      _style = _impl.defaultStyle(DEFAULT_WIDTH, theme);
     }
 
     let styleEl = defsEl.selectAll('style' + (id ?  '#style-tip-' + id : '.style-' + classed)).data(_style ? [ _style ] : []);
@@ -246,13 +248,14 @@ export default function tip(id) {
     return _impl;
   }
 
-  _impl.defaultStyle = _theme => `
-                  ${fonts.variable.cssImport}  
+  _impl.defaultStyle = (_width, _theme) => `
+                  ${fonts.fixed.cssImport}  
                   ${_impl.self()} {
                                     line-height: 1;
-                                    font-family: ${fonts.variable.family};
+                                    font-family: ${fonts.fixed.family};
                                     color: ${display[_theme].negative.text};
                                     font-weight: ${fonts.fixed.weightMonochrome};  
+                                    font-size: ${fonts.fixed.sizeForWidth(_width)};  
                                     padding: 8px;
                                     background: ${display[_theme].negative.background};
                                     border-radius: 2px;
@@ -265,13 +268,14 @@ export default function tip(id) {
                                       width: 100%;
                                       line-height: 1;
                                       color: ${display[_theme].negative.background};
+                                      font-size: ${fonts.fixed.sizeForWidth(1)};  
                                       position: absolute;
                                       pointer-events: none;
                                     }
                     /* Northward tooltips */
                     ${_impl.self()}.n:after {
                                       content: "\\25bc";
-                                      margin: -2px 0 0 0;
+                                      margin: -3px 0 0 0;
                                       top: 100%;
                                       left: 0;
                                       text-align: center;
@@ -279,22 +283,22 @@ export default function tip(id) {
                     /* Eastward tooltips */
                     ${_impl.self()}.e:after {
                                       content: "\\25C0";
-                                      margin: -4px 0 0 0;
+                                      margin: -7px 0 0 0;
                                       top: 50%;
-                                      left: -8px;
+                                      left: -7px;
                                     }
                     /* Southward tooltips */
                     ${_impl.self()}.s:after {
                                       content: "\\25B2";
                                       margin: 0 0 1px 0;
-                                      top: -7px;
+                                      top: -10px;
                                       left: 0;
                                       text-align: center;
                                     }
                     /* Westward tooltips */
                     ${_impl.self()}.w:after {
                                       content: "\\25B6";
-                                      margin: -4px 0 0 -1px;
+                                      margin: -7px 0 0 0;
                                       top: 50%;
                                       left: 100%;
                                     }                
