@@ -40,7 +40,9 @@ export default function tip(id) {
       style     = undefined;
 
   function initNode() {
-    let node = select(document.createElement('div'))
+    let node = select('div' + (id ?  '#' + id : '.' + classed));
+    if (node.empty())
+      node = select(document.createElement('div'))
     node
       .attr('id', id)
       .attr('class', classed)
