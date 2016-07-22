@@ -18,6 +18,9 @@
 
     <h3>Custom position</h3>
     <div id="hov"></div>
+
+    <h3>Null tip</h3>
+    <div id="nul"></div>
         
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-theme/latest/d3-rs-theme.umd-es2015.min.js"></script>
@@ -51,31 +54,67 @@
     var a = document.querySelector("[data-date='2016-06-02']");
     rstip.show(a)
 
-    var rstip2 = d3_rs_tip.body('custom')
-                  .transition(true)
-                  .theme('dark')
-                  .html(d => `<h4>Custom Tip</h4><p><img width="50" height="50" src="${d}"/></p>`);
+
       
     var svg = d3_rs_svg.html()
               .margin(0)
               .width(300)
               .height(300)
               .background(d3_rs_theme.display.dark.background);
+    
+    function draw() {          
+      var rstip2 = d3_rs_tip.body('custom')
+                    .transition(true)
+                    .theme('dark')
+                    .html(d => `<h4>Custom Tip</h4><p><img width="50" height="50" src="${d}"/></p>`);
+      d3.select('#hov')
+          .call(svg)
+          .select(svg.self())
+          .call(rstip2)
+          .select(svg.child())
+            .append('rect')
+            .datum('http://theinspirationgrid.com/wp-content/uploads/2012/07/835a-motion.gif')
+            .attr('x', 100)
+            .attr('y', 100)
+            .attr('width', 100)
+            .attr('height', 100)
+            .attr('fill', 'blue')
+            .on('mouseover', rstip2.show)
+            .on('mouseout', rstip2.hide);
+    }
+    draw();
+    var i = 0;
+    var timer = setInterval(function() {
+      i++;
+      if (i === 10) clearInterval(timer);
+      draw();
+    }, 1000);
+    
+    var rstip3 = d3_rs_tip.body('null')
+                  .transition(true)
+                  .theme('dark')
+                  .html(d => null);
+      
+    var svg3 = d3_rs_svg.html()
+              .margin(0)
+              .width(300)
+              .height(300)
+              .background(d3_rs_theme.display.dark.background);
 
-    d3.select('#hov')
-        .call(svg)
+    d3.select('#nul')
+        .call(svg3)
         .select(svg.self())
-        .call(rstip2)
+        .call(rstip3)
         .select(svg.child())
           .append('rect')
-          .datum('http://theinspirationgrid.com/wp-content/uploads/2012/07/835a-motion.gif')
           .attr('x', 100)
           .attr('y', 100)
           .attr('width', 100)
           .attr('height', 100)
-          .attr('fill', 'blue')
-          .on('mouseover', rstip2.show)
-          .on('mouseout', rstip2.hide);
+          .attr('fill', 'green')
+          .on('mouseover', rstip3.show)
+          .on('mouseout', rstip3.hide);          
+          
     </script>
   </body>
 </html>

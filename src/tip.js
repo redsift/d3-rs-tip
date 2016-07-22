@@ -84,7 +84,7 @@ export default function tip(id) {
     
     let _style = style;
     if (_style === undefined) {
-      _style = _impl.defaultStyle(DEFAULT_WIDTH, theme);
+      _style = _impl.defaultStyle(theme, DEFAULT_WIDTH);
     }
 
     let styleEl = defsEl.selectAll('style' + (id ?  '#style-tip-' + id : '.style-' + classed)).data(_style ? [ _style ] : []);
@@ -118,8 +118,10 @@ export default function tip(id) {
       args[0] = target.__data__;
     }
 
-    let content = html.apply(target, args),
-        poffset = offset.apply(target, args),
+    let content = html.apply(target, args);
+    if (content == null) return _impl;
+    
+    let poffset = offset.apply(target, args),
         dir     = direction.apply(target, args),
         nodel   = getNodeEl(),
         i       = directions.length,
@@ -151,7 +153,10 @@ export default function tip(id) {
   //
   // Returns a tip
   _impl.hide = function() {
-    getNodeEl().style('opacity', 0.0);
+    let nodel = getNodeEl();
+    
+    nodel.interrupt(); // stop the fade in if happening
+    nodel.style('opacity', 0.0);
     return _impl;
   }
 
@@ -248,7 +253,7 @@ export default function tip(id) {
     return _impl;
   }
 
-  _impl.defaultStyle = (_width, _theme) => `
+  _impl.defaultStyle = (_theme, _width) => `
                   ${fonts.fixed.cssImport}  
                   ${_impl.self()} {
                                     line-height: 1;
@@ -307,64 +312,64 @@ export default function tip(id) {
   function direction_n() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.n.y - node.offsetHeight),
-      left: Math.round(bbox.n.x - node.offsetWidth / 2)
+      top:  (bbox.n.y - node.offsetHeight),
+      left: (bbox.n.x - node.offsetWidth / 2)
     }
   }
 
   function direction_s() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.s.y),
-      left: Math.round(bbox.s.x - node.offsetWidth / 2)
+      top:  (bbox.s.y),
+      left: (bbox.s.x - node.offsetWidth / 2)
     }
   }
 
   function direction_e() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.e.y - node.offsetHeight / 2),
-      left: Math.round(bbox.e.x)
+      top:  (bbox.e.y - node.offsetHeight / 2),
+      left: (bbox.e.x)
     }
   }
 
   function direction_w() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.w.y - node.offsetHeight / 2),
-      left: Math.round(bbox.w.x - node.offsetWidth)
+      top:  (bbox.w.y - node.offsetHeight / 2),
+      left: (bbox.w.x - node.offsetWidth)
     }
   }
 
   function direction_nw() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.nw.y - node.offsetHeight),
-      left: Math.round(bbox.nw.x - node.offsetWidth)
+      top:  (bbox.nw.y - node.offsetHeight),
+      left: (bbox.nw.x - node.offsetWidth)
     }
   }
 
   function direction_ne() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.ne.y - node.offsetHeight),
-      left: Math.round(bbox.ne.x)
+      top:  (bbox.ne.y - node.offsetHeight),
+      left: (bbox.ne.x)
     }
   }
 
   function direction_sw() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.sw.y),
-      left: Math.round(bbox.sw.x - node.offsetWidth)
+      top:  (bbox.sw.y),
+      left: (bbox.sw.x - node.offsetWidth)
     }
   }
 
   function direction_se() {
     let bbox = getScreenBBox()
     return {
-      top:  Math.round(bbox.se.y),
-      left: Math.round(bbox.se.x)
+      top:  (bbox.se.y),
+      left: (bbox.se.x)
     }
   }
 
