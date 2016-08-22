@@ -118,9 +118,11 @@ export default function tip(id) {
     if(!parent) _impl.parent(document.body);
     let args = [].slice.call(arguments);
     target = this;
+    let standalone = false;
     if(args.length === 1 && IsDOMElement(args[0])){
       target = args[0];
       args[0] = target.__data__;
+      standalone = true;
     }
 
     let content = html.apply(target, args);
@@ -141,6 +143,18 @@ export default function tip(id) {
     nodel
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
+
+    if(standalone){
+      window.addEventListener("load", function(event) {
+        // for testing
+        // console.log('offsets',node.offsetHeight, node.offsetWidth)
+        coords = direction_callbacks[dir].apply(target);
+        nodel
+            .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
+            .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
+      });
+    }
+
     if (transition != null && transition !== false) {
       nodel = nodel.transition();
       if (typeof transition === 'number') {
