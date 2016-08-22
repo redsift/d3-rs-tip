@@ -1,6 +1,6 @@
 {
   "name": "@redsift/d3-rs-tip",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Tip for graphs using D3v4.",
   "keywords": [
     "redsift",
