@@ -73,6 +73,7 @@ export default function tip(id) {
   }
 
   function _impl(vis) {
+    if(!parent) _impl.parent(document.body);
     let svg = getSVGNode(vis)
     if (!svg) return;
     
@@ -132,22 +133,21 @@ export default function tip(id) {
         parentCoords = node.offsetParent.getBoundingClientRect();
 
     while(i--) nodel.classed(directions[i], false);
-    
+
+    nodel.classed(dir, true).html(content)
+
     let coords = direction_callbacks[dir].apply(target);
 
-    nodel.classed(dir, true)
+    nodel
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
-      .html(content);
-    
     if (transition != null && transition !== false) {
       nodel = nodel.transition();
       if (typeof transition === 'number') {
         nodel = nodel.duration(transition);
       }
     }
-      
-    
+
     nodel.style('opacity', 1.0);
 
     return _impl;
