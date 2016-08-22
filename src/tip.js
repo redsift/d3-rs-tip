@@ -62,7 +62,9 @@ export default function tip(id) {
   }
 
   function getNodeEl() {
+    //TODO: this check might not be valid any more  
     if(node === null) {
+      console.debug('re-adding node to DOM')
       node = initNode();
       // re-add node to DOM
       parent.appendChild(node);
