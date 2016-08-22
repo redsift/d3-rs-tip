@@ -2,7 +2,7 @@ var tape = require("@redsift/tape-reel")("<div id='test'></div>"),
     d3 = require("d3-selection"),
     tip = require("../");
 
-// This test should be on all brick compatable charts
+// This test should be on all brick compatible charts
 tape("html() empty state", function(t) {
     var host = tip.body();
     var el = d3.select('#test').append('svg');

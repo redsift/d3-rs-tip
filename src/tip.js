@@ -62,6 +62,7 @@ export default function tip(id) {
   }
 
   function getNodeEl() {
+    //TODO: this check might not be valid any more  
     if(node === null) {
       node = initNode();
       // re-add node to DOM
@@ -71,6 +72,9 @@ export default function tip(id) {
   }
 
   function _impl(vis) {
+    if(!parent) {
+      document.body.appendChild(node);
+    }
     let svg = getSVGNode(vis)
     if (!svg) return;
     
@@ -115,9 +119,11 @@ export default function tip(id) {
     if(!parent) _impl.parent(document.body);
     let args = [].slice.call(arguments);
     target = this;
+    let standalone = false;
     if(args.length === 1 && IsDOMElement(args[0])){
       target = args[0];
       args[0] = target.__data__;
+      standalone = true;
     }
 
     let content = html.apply(target, args);
@@ -130,22 +136,33 @@ export default function tip(id) {
         parentCoords = node.offsetParent.getBoundingClientRect();
 
     while(i--) nodel.classed(directions[i], false);
-    
+
+    nodel.classed(dir, true).html(content)
+
     let coords = direction_callbacks[dir].apply(target);
 
-    nodel.classed(dir, true)
+    nodel
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
-      .html(content);
-    
+
+    if(standalone){
+      window.addEventListener('load', function() {
+        // for testing
+        // console.log('offsets',node.offsetHeight, node.offsetWidth)
+        coords = direction_callbacks[dir].apply(target);
+        nodel
+            .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
+            .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
+      });
+    }
+
     if (transition != null && transition !== false) {
       nodel = nodel.transition();
       if (typeof transition === 'number') {
         nodel = nodel.duration(transition);
       }
     }
-      
-    
+
     nodel.style('opacity', 1.0);
 
     return _impl;
