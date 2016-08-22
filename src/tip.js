@@ -64,7 +64,6 @@ export default function tip(id) {
   function getNodeEl() {
     //TODO: this check might not be valid any more  
     if(node === null) {
-      console.debug('re-adding node to DOM')
       node = initNode();
       // re-add node to DOM
       parent.appendChild(node);
@@ -73,7 +72,9 @@ export default function tip(id) {
   }
 
   function _impl(vis) {
-    if(!parent) _impl.parent(document.body);
+    if(!parent) {
+      document.body.appendChild(node);
+    }
     let svg = getSVGNode(vis)
     if (!svg) return;
     
@@ -145,7 +146,7 @@ export default function tip(id) {
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
 
     if(standalone){
-      window.addEventListener("load", function(event) {
+      window.addEventListener('load', function() {
         // for testing
         // console.log('offsets',node.offsetHeight, node.offsetWidth)
         coords = direction_callbacks[dir].apply(target);
