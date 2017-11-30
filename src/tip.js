@@ -37,7 +37,8 @@ export default function tip(id) {
       parent    = null,
       theme     = 'light',
       transition= false,
-      style     = undefined;
+      style     = undefined,
+      zIndex    = 16777271;
 
   function initNode() {
     let node = select('div' + (id ?  '#' + id : '.' + classed));
@@ -144,6 +145,7 @@ export default function tip(id) {
     nodel
       .style('top', (coords.top +  poffset[0]) - parentCoords.top + 'px')
       .style('left', (coords.left + poffset[1]) - parentCoords.left + 'px')
+      .style('z-index', zIndex);
 
     if(standalone){
       window.addEventListener('load', function() {
@@ -256,6 +258,9 @@ export default function tip(id) {
     return arguments.length ? (theme = _, _impl) : theme;
   }  
   
+  _impl.zIndex = function(_) {
+    return arguments.length ? (zIndex = _, _impl) : zIndex;
+  } 
 
   _impl.parent = function(v) {
     if (!arguments.length) return parent;
