@@ -74,7 +74,7 @@
           .call(rstip2)
           .select(svg.child())
             .append('rect')
-            .datum('http://theinspirationgrid.com/wp-content/uploads/2012/07/835a-motion.gif')
+            .datum('https://cdn.dribbble.com/users/46315/screenshots/1065283/icons-animation.gif')
             .attr('x', 100)
             .attr('y', 100)
             .attr('width', 100)
@@ -85,12 +85,7 @@
     }
  
     draw();
-    var i = 0;
-    var timer = setInterval(function() {
-      i++;
-      if (i === 10) clearInterval(timer);
-      draw();
-    }, 1000);
+
   
     var rstip3 = d3_rs_tip.body('null')
                   .transition(true)
