@@ -128,17 +128,25 @@ export default function tip(id) {
     }
 
     let content = html.apply(target, args);
-    if (content == null) return _impl;
+    if (content === null) return _impl;
     
     let poffset = offset.apply(target, args),
-        dir     = direction.apply(target, args),
+        dir     = direction ? direction.apply(target, args) : null,
         nodel   = getNodeEl(),
         i       = directions.length,
         parentCoords = node.offsetParent.getBoundingClientRect();
 
     while(i--) nodel.classed(directions[i], false);
 
-    nodel.classed(dir, true).html(content)
+    if (content != null) {
+      nodel.html(content)
+    }
+    
+    if (dir) {
+      nodel.classed(dir, true);
+    } else {
+      dir = 'n';
+    }
 
     let coords = direction_callbacks[dir].apply(target);
 
