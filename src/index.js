@@ -1,8 +1,8 @@
 export {
   version
-} from "./package.json";
+} from "../package.json";
 
 
 export {
   default as body
-} from "./src/tip.js";
+} from "./tip.js";
