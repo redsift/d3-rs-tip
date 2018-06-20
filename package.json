@@ -1,6 +1,6 @@
 {
   "name": "@redsift/d3-rs-tip",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Tip for graphs using D3v4.",
   "keywords": [
     "redsift",
@@ -24,7 +24,7 @@
   "scripts": {
     "serve": "gulp -o d3-rs-tip serve",
     "prepublish": "npm run clean; npm run build",
-    "build": "npm run clean; node ./node_modules/@redsift/rollup-bundler/src/index.js",
+    "build": "npm run clean; node ./node_modules/@redsift/rollup-bundler/src/index.js bundle.config.js",
     "clean": "rm -rf dist",
     "pretest": "(npm outdated || true) && npm run build",
     "test": "tape 'test/**/*-test.js' && eslint index.js src"
@@ -34,8 +34,8 @@
     "@redsift/rollup-bundler": "^0.3.2",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
-    "d3-selection": "~1.2.0",
-    "d3-transition": "~1.1.1"
+    "d3-selection": "^1.2.0",
+    "d3-transition": "^1.1.1"
   },
   "devDependencies": {
     "@redsift/tape-reel": "~0.1.0",
