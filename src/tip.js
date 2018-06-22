@@ -184,7 +184,9 @@ export default function tip(id) {
   _impl.hide = function() {
     let nodel = getNodeEl();
     
-    nodel.interrupt(); // stop the fade in if happening
+    if (nodel.interrupt) {
+      nodel.interrupt(); // stop the fade in if happening
+    }
     nodel.style('opacity', 0.0);
     return _impl;
   }

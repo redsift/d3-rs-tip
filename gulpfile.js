@@ -49,7 +49,7 @@ gulp.task('umd', task.umd = () => {
   return rollup({
     name: outputFilename.replace(/-/g, '_'),
         globals: globalMap,
-        input: 'index.js',
+        input: 'src/index.js',
         format: 'umd',
         sourcemap: true,
         plugins: [ 

@@ -1,6 +1,6 @@
 {
   "name": "@redsift/d3-rs-tip",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Tip for graphs using D3v4.",
   "keywords": [
     "redsift",
@@ -27,7 +27,7 @@
     "build": "npm run clean; node ./node_modules/@redsift/rollup-bundler/src/index.js bundle.config.js",
     "clean": "rm -rf dist",
     "pretest": "(npm outdated || true) && npm run build",
-    "test": "tape 'test/**/*-test.js' && eslint index.js src"
+    "test": "tape 'test/**/*-test.js' && eslint src"
   },
   "dependencies": {
     "@redsift/d3-rs-theme": "^0.4.1",
