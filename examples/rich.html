@@ -15,7 +15,7 @@
 
     <h3>Custom chart</h3>
     <div id="hov"></div>
-        
+
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-theme/latest/d3-rs-theme.umd-es2015.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-svg/latest/d3-rs-svg.umd-es2015.min.js"></script>
@@ -31,11 +31,11 @@
               .width(300)
               .height(300)
               .background(d3_rs_theme.display.dark.background);
-    
+
     function drawTip(d) {
       var div = d3.select(rstip.self());
-      
-      div.selectAll('h3').data([ d ]).enter().append('h3').text(d);    
+
+      div.selectAll('h3').data([ d ]).enter().append('h3').text(d);
       var venn = d3_rs_venn.html('simple').width(200).background(null);
       div.datum(
       [ {sets: ['A'], size: 14},
@@ -50,11 +50,11 @@
         {sets: ['A','B'], size: 3}
       ]
       ).transition().delay(DISPLAY_ANIMATION).call(venn);
-      
-      // trick is to return undefined to get the tip to show the state
-    }  
 
-      
+      // trick is to return undefined to get the tip to show the state
+    }
+
+
     var rstip = d3_rs_tip.body('custom')
                   .transition(DISPLAY_ANIMATION)
                   .theme('dark')
@@ -74,7 +74,7 @@
           .attr('fill', 'blue')
           .on('mouseover', rstip.show)
           .on('mouseout', rstip.hide);
-        
+
     </script>
   </body>
 </html>
