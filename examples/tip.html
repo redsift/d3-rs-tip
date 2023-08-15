@@ -21,7 +21,7 @@
 
     <h3>Null tip</h3>
     <div id="nul"></div>
-        
+
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-theme/latest/d3-rs-theme.umd-es2015.min.js"></script>
     <script src="//static.redsift.io/reusable/d3-rs-svg/latest/d3-rs-svg.umd-es2015.min.js"></script>
@@ -30,14 +30,14 @@
     <script>
 
     'use strict';
-/*    
+/*
     var points = [
       {date: '2016-05-01', value: 10},
       {date: '2016-05-01', value: 20},
       {date: '2016-05-05', value: 5},
       {date: '2016-06-02', value: 15}
     ];
-   
+
     var chart = d3_rs_calendar_chart.html().lastWeeks(12);
 
     var rstip = d3_rs_tip.body()
@@ -57,14 +57,14 @@
     rstip.show(a)
 */
 
-      
+
     var svg = d3_rs_svg.html()
               .margin(0)
               .width(300)
               .height(300)
               .background(d3_rs_theme.display.dark.background);
-    
-    function draw() {          
+
+    function draw() {
       var rstip2 = d3_rs_tip.body('custom')
                     .transition(true)
                     .theme('dark')
@@ -84,15 +84,15 @@
             .on('mouseover', rstip2.show)
             .on('mouseout', rstip2.hide);
     }
- 
+
     draw();
 
-  
+
     var rstip3 = d3_rs_tip.body('null')
                   .transition(true)
                   .theme('dark')
                   .html(d => null);
-      
+
     var svg3 = d3_rs_svg.html()
               .margin(0)
               .width(300)
@@ -111,8 +111,8 @@
           .attr('height', 100)
           .attr('fill', 'green')
           .on('mouseover', rstip3.show)
-          .on('mouseout', rstip3.hide);          
-            
+          .on('mouseout', rstip3.hide);
+
     </script>
   </body>
 </html>
